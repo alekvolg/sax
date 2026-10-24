@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="description" content="Alek Volg — saksofon na żywo na wesela, eventy firmowe, przyjęcia i koncerty. Elegancja, emocje i muzyka, która zostaje.">
+  <title>Alek Volg | Saksofon na żywo — wesela i eventy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #121216;
+      --panel-soft: #17171c;
+      --gold: #d4af37;
+      --gold-light: #f0d986;
+      --text: #f5f3ee;
+      --muted: #b0adb4;
+      --line: rgba(212,175,55,.24);
+      --radius: 22px;
+      --max: 980px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% -15%, rgba(212,175,55,.10), transparent 44%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Plus Jakarta Sans", sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    .page { width: min(100% - 32px, var(--max)); margin: 0 auto; }
+    .topbar { display: flex; justify-content: flex-end; padding: 20px 0 8px; }
+    .language {
+      appearance: none; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(18,18,22,.86); color: var(--text); padding: 9px 15px;
+      font: 600 .82rem "Plus Jakarta Sans", sans-serif; cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .language:hover, .language:focus-visible { border-color: var(--gold); color: var(--gold-light); }
+    
+    /* Hero section: всегда вертикальное расположение (фото сверху, текст снизу) */
+    .hero {
+      position: relative; overflow: hidden; isolation: isolate;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: clamp(24px, 4vw, 38px);
+      padding: clamp(26px, 5vw, 56px);
+      border: 1px solid var(--line); border-radius: 28px;
+      background: linear-gradient(135deg, rgba(24,24,29,.97), rgba(12,12,15,.97));
+      box-shadow: 0 24px 70px rgba(0,0,0,.3);
+    }
+    .hero::before {
+      content: ""; position: absolute; z-index: -1; width: 440px; height: 440px;
+      border-radius: 50%; right: -210px; top: -230px;
+      background: radial-gradient(circle, rgba(212,175,55,.13), transparent 68%);
+    }
+
+    /* Галерея / Слайдер фото */
+    .gallery-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-track-wrapper {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 10px 0;
+      /* Разрешаем вертикальную прокрутку страницы, но обрабатываем горизонтальные свайпы */
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .gallery-track {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      gap: 16px;
+      will-change: transform;
+    }
+    .gallery-item {
+      flex: 0 0 78%;
+      max-width: 300px;
+      aspect-ratio: 3 / 4;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid var(--gold);
+      background: var(--panel);
+      box-shadow: 0 12px 35px rgba(0,0,0,.4);
+      opacity: 0.5;
+      transform: scale(0.9);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .gallery-item.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(18, 18, 22, 0.9);
+      border: 1px solid var(--line);
+      color: var(--gold);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .gallery-arrow:hover {
+      background: var(--panel-soft);
+      border-color: var(--gold);
+      color: var(--gold-light);
+      transform: translateY(-50%) scale(1.05);
+    }
+    .gallery-prev { left: -12px; }
+    .gallery-next { right: -12px; }
+
+    .eyebrow {
+      color: var(--gold-light); font-size: .72rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase; margin: 0 0 12px;
+    }
+    h1 {
+      margin: 0; color: var(--gold); font-family: "Cinzel", serif;
+      font-size: clamp(2.5rem, 6vw, 4.6rem); font-weight: 600; letter-spacing: .035em;
+      line-height: 1.08;
+    }
+    .slogan {
+      font-family: "Cinzel", serif; font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+      line-height: 1.4; margin: 18px 0 10px; color: var(--text);
+    }
+    .hero-copy { color: var(--muted); margin: 0; font-size: 1rem; }
+    .service-line { margin: 20px 0 0; color: #e5e0d5; font-size: .88rem; }
+    .service-line span { color: var(--gold); padding: 0 5px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 26px; justify-content: center; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      min-height: 48px; padding: 12px 18px; border-radius: 12px;
+      text-decoration: none; font-size: .88rem; font-weight: 700;
+      transition: transform .2s, border-color .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { background: linear-gradient(135deg, var(--gold-light), #bd941e); color: #111; }
+    .button-secondary { border: 1px solid var(--line); background: rgba(255,255,255,.02); color: var(--text); }
+    .button-secondary:hover { border-color: var(--gold); color: var(--gold-light); }
+    section { margin-top: clamp(48px, 8vw, 76px); }
+    .section-heading { text-align: center; margin: 0 auto 24px; max-width: 680px; }
+    .section-heading .eyebrow { margin-bottom: 7px; }
+    h2 {
+      font-family: "Cinzel", serif; font-size: clamp(1.45rem, 3vw, 2rem);
+      font-weight: 500; line-height: 1.35; margin: 0; color: var(--gold-light);
+    }
+    .intro-card {
+      max-width: 790px; margin: 0 auto; padding: clamp(23px, 4vw, 38px);
+      border: 1px solid var(--line); border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--panel), rgba(18,18,22,.72));
+      text-align: center;
+    }
+    .intro-card p { color: var(--muted); margin: 12px 0 0; }
+    .intro-card .lead { color: var(--text); font-size: 1.12rem; font-weight: 600; margin-top: 0; }
+    .services { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+    .service {
+      padding: 22px; border: 1px solid var(--line); border-radius: 17px;
+      background: var(--panel); min-height: 145px; text-align: left;
+    }
+    .service i { color: var(--gold); font-size: 1.2rem; margin-bottom: 12px; }
+    .service h3 { margin: 0 0 6px; font-size: 1rem; font-weight: 700; }
+    .service p { color: var(--muted); margin: 0; font-size: .88rem; }
+    .music-note {
+      text-align: center; max-width: 700px; margin: 0 auto; color: var(--muted);
+    }
+    .music-note strong { color: var(--text); font-weight: 600; }
+    .social-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .social-link {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 17px 19px; border: 1px solid var(--line); border-radius: 14px;
+      background: var(--panel); text-decoration: none; font-weight: 600;
+      transition: border-color .2s, transform .2s, background .2s;
+    }
+    .social-link:hover { border-color: var(--gold); background: var(--panel-soft); transform: translateY(-2px); }
+    .social-label { display: flex; align-items: center; gap: 12px; }
+    .social-label i { width: 22px; text-align: center; color: var(--gold); font-size: 1.2rem; }
+    .arrow { color: var(--muted); font-size: .78rem; }
+    .contact-panel {
+      text-align: center; padding: clamp(25px, 5vw, 42px);
+      border-radius: 24px; border: 1px solid var(--line);
+      background: radial-gradient(ellipse at top, rgba(212,175,55,.09), transparent 70%), var(--panel);
+    }
+    .contact-panel p { color: var(--muted); margin: 12px auto 0; max-width: 560px; }
+    .contact-panel .actions { justify-content: center; }
+    footer { text-align: center; padding: 32px 0 24px; color: #85828a; font-size: .76rem; }
+    footer .brand { font-family: "Cinzel", serif; color: var(--gold); letter-spacing: .12em; margin-bottom: 5px; }
+    :focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+    @media (max-width: 700px) {
+      .hero { padding: 25px 20px 28px; gap: 24px; }
+      .service-line { line-height: 2; }
+    }
+    @media (max-width: 430px) {
+      .page { width: min(100% - 22px, var(--max)); }
+      .topbar { padding-top: 13px; }
+      .services, .social-grid { grid-template-columns: 1fr; }
+      .service { min-height: auto; }
+      .button { width: 100%; }
+      .actions { width: 100%; }
+      h1 { font-size: 2.35rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <button class="language" type="button" id="langBtn" aria-label="Switch language" onclick="toggleLanguage()">EN</button>
+    </div>
+
+    <header class="hero">
+      <!-- Галерея фотографий сверху -->
+      <div class="gallery-container">
+        <button class="gallery-arrow gallery-prev" type="button" aria-label="Poprzednie zdjęcie"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+        <div class="gallery-track-wrapper">
+          <div class="gallery-track" id="galleryTrack">
+            <div class="gallery-item active" data-index="0">
+              <img src="profile.jpg" alt="Alek Volg z saksofonem 1" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="1">
+              <img src="profile2.jpg" alt="Alek Volg z saksofonem 2" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="2">
+              <img src="profile3.jpg" alt="Alek Volg z saksofonem 3" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="3">
+              <img src="profile4.jpg" alt="Alek Volg z saksofonem 4" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="4">
+              <img src="profile5.jpg" alt="Alek Volg z saksofonem 5" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="5">
+              <img src="profile6.jpg" alt="Alek Volg z saksofonem 6" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="6">
+              <img src="profile7.jpg" alt="Alek Volg z saksofonem 7" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="7">
+              <img src="profile8.jpg" alt="Alek Volg z saksofonem 8" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="8">
+              <img src="profile9.jpg" alt="Alek Volg z saksofonem 9" width="600" height="800">
+            </div>
+            <div class="gallery-item" data-index="9">
+              <img src="profile10.jpg" alt="Alek Volg z saksofonem 10" width="600" height="800">
+            </div>
+          </div>
+        </div>
+        <button class="gallery-arrow gallery-next" type="button" aria-label="Następne zdjęcie"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+
+      <!-- Текстовый блок снизу от галереи -->
+      <div class="hero-content">
+        <p class="eyebrow" id="heroEyebrow">Saksofonista · Muzyk</p>
+        <h1>Alek Volg</h1>
+        <p class="slogan" id="tagline">Muzyka, która zostaje.</p>
+        <p class="hero-copy" id="heroCopy">Saksofon na żywo. Elegancja i emocje.</p>
+        <p class="service-line" id="serviceLine">Wesela <span>·</span> Eventy firmowe <span>·</span> Przyjęcia <span>·</span> Koncerty</p>
+        <div class="actions">
+          <a class="button button-primary" href="#contact">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i><span id="contactHeroText">Skontaktuj się ze mną</span><i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <section id="about">
+      <div class="section-heading">
+        <p class="eyebrow" id="aboutEyebrow">Kilka słów o mnie</p>
+        <h2 id="aboutTitle">Muzyka to coś więcej niż dźwięki.</h2>
+      </div>
+      <div class="intro-card">
+        <p class="lead" id="aboutLead">To emocje, atmosfera i chwile, które zostają w pamięci.</p>
+        <p id="aboutText">Jestem Alek Volg — saksofonista, dla którego muzyka jest sposobem wyrażania siebie i komunikowania się ze światem. Wierzę, że dźwięk potrafi zmienić atmosferę miejsca, wywołać uśmiech i sprawić, że zwykła chwila staje się wyjątkowa.</p>
+        <p id="aboutText2">Podczas występów dopasowuję muzykę do charakteru wydarzenia i ludzi, którzy je tworzą — od subtelnych, nastrojowych melodii po energetyczne rytmy.</p>
+      </div>
+    </section>
+
+    <section id="offer">
+      <div class="section-heading">
+        <p class="eyebrow" id="offerEyebrow">Muzyka na różne okazje</p>
+        <h2 id="offerTitle">Dopasowana do chwili i miejsca.</h2>
+      </div>
+      <div class="services">
+        <article class="service">
+          <i class="fa-solid fa-champagne-glasses" aria-hidden="true"></i>
+          <h3 id="weddingTitle">Wesela i uroczystości</h3>
+          <p id="weddingText">Muzyczna oprawa wybranych momentów — od nastrojowych melodii po energetyczne wejścia i wyjścia.</p>
+        </article>
+        <article class="service">
+          <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+          <h3 id="corporateTitle">Eventy firmowe</h3>
+          <p id="corporateText">Saksofon na spotkania firmowe, bankiety, kolacje i wydarzenia specjalne.</p>
+        </article>
+        <article class="service">
+          <i class="fa-solid fa-martini-glass" aria-hidden="true"></i>
+          <h3 id="privateTitle">Przyjęcia i restauracje</h3>
+          <p id="privateText">Muzyka na żywo, która tworzy klimat podczas prywatnych uroczystości i spotkań.</p>
+        </article>
+        <article class="service">
+          <i class="fa-solid fa-music" aria-hidden="true"></i>
+          <h3 id="concertTitle">Koncerty i wydarzenia</h3>
+          <p id="concertText">Występy dopasowane do miejsca, publiczności i charakteru wydarzenia.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="music">
+      <div class="section-heading">
+        <p class="eyebrow" id="musicEyebrow">Posłuchaj i poznaj mój styl</p>
+        <h2 id="musicTitle">Najlepiej mówi muzyka.</h2>
+      </div>
+      <p class="music-note" id="musicText">Odwiedź moje profile, zobacz nagrania i poznaj różne odsłony mojej muzycznej drogi. Wkrótce pojawią się tu również wybrane materiały wideo.</p>
+    </section>
+
+    <section id="social">
+      <div class="social-grid">
+        <a class="social-link" href="https://instagram.com/alek_volg_sax" target="_blank" rel="noopener noreferrer">
+          <span class="social-label"><i class="fa-brands fa-instagram" aria-hidden="true"></i>Instagram</span><i class="fa-solid fa-arrow-up-right-from-square arrow" aria-hidden="true"></i>
+        </a>
+        <a class="social-link" href="https://tiktok.com/@alek.volg.sax" target="_blank" rel="noopener noreferrer">
+          <span class="social-label"><i class="fa-brands fa-tiktok" aria-hidden="true"></i>TikTok</span><i class="fa-solid fa-arrow-up-right-from-square arrow" aria-hidden="true"></i>
+        </a>
+        <a class="social-link" href="https://youtube.com/@alek-volg-sax" target="_blank" rel="noopener noreferrer">
+          <span class="social-label"><i class="fa-brands fa-youtube" aria-hidden="true"></i>YouTube</span><i class="fa-solid fa-arrow-up-right-from-square arrow" aria-hidden="true"></i>
+        </a>
+        <a class="social-link" href="https://facebook.com/AlekVolg" target="_blank" rel="noopener noreferrer">
+          <span class="social-label"><i class="fa-brands fa-facebook" aria-hidden="true"></i>Facebook</span><i class="fa-solid fa-arrow-up-right-from-square arrow" aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-panel">
+        <p class="eyebrow" id="contactEyebrow">Porozmawiajmy o muzyce</p>
+        <h2 id="contactTitle">Planujesz wydarzenie?</h2>
+        <p id="contactText">Napisz lub zadzwoń — porozmawiamy o charakterze wydarzenia i muzyce, która będzie do niego pasować.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://wa.me/48665744482" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i><span id="whatsappText">Napisz na WhatsApp</span>
+          </a>
+          <a class="button button-secondary" href="tel:+48665744482">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i><span id="callText">Zadzwoń: +48 665 744 482</span>
+          </a>
+          <a class="button button-secondary" href="mailto:alekvolg777@gmail.com">
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i><span id="emailText">Napisz e-mail</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="brand">ALEK VOLG</div>
+      <p id="footerText">Saksofon na żywo · Polska</p>
+      <p>© <span id="year"></span> Alek Volg. <span id="rightsText">Wszelkie prawa zastrzeżone.</span></p>
+    </footer>
+  </main>
+
+  <script>
+    // Логика слайдера галереи
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.gallery-item');
+    const track = document.getElementById('galleryTrack');
+
+    function updateGallery() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      if (slides.length > 0) {
+        const slideWidth = slides[0].offsetWidth;
+        const gap = 16;
+        const containerWidth = track.parentElement.offsetWidth;
+        const offset = (containerWidth - slideWidth) / 2 - currentSlide * (slideWidth + gap);
+        track.style.transform = `translateX(${offset}px)`;
+      }
+    }
+
+    document.querySelector('.gallery-next').addEventListener('click', () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateGallery();
+    });
+
+    document.querySelector('.gallery-prev').addEventListener('click', () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateGallery();
+    });
+
+    // Переключение фотографий свайпом на сенсорных экранах
+    // и перетаскиванием мышью на компьютере.
+    const galleryWrapper = document.querySelector('.gallery-track-wrapper');
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let activePointerId = null;
+
+    galleryWrapper.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+
+      activePointerId = event.pointerId;
+      swipeStartX = event.clientX;
+      swipeStartY = event.clientY;
+    });
+
+    galleryWrapper.addEventListener('pointerup', (event) => {
+      if (event.pointerId !== activePointerId) return;
+      activePointerId = null;
+
+      const deltaX = event.clientX - swipeStartX;
+      const deltaY = event.clientY - swipeStartY;
+      const swipeThreshold = event.pointerType === 'mouse' ? 55 : 45;
+
+      // Нужен отчётливый горизонтальный жест; вертикальная прокрутка не переключает слайды.
+      if (Math.abs(deltaX) < swipeThreshold || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+
+      if (deltaX < 0) {
+        currentSlide = (currentSlide + 1) % slides.length;
+      } else {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      }
+      updateGallery();
+    });
+
+    galleryWrapper.addEventListener('pointercancel', () => {
+      activePointerId = null;
+    });
+
+    // Не даём браузеру перетаскивать сами файлы изображений.
+    slides.forEach((slide) => {
+      const image = slide.querySelector('img');
+      if (image) image.draggable = false;
+    });
+
+    window.addEventListener('resize', updateGallery);
+    window.addEventListener('load', updateGallery);
+    setTimeout(updateGallery, 50);
+
+    // Перевод интерфейса
+    const translations = {
+      pl: {
+        langBtn: "EN",
+        heroEyebrow: "Saksofonista · Muzyk",
+        tagline: "Muzyka, która zostaje.",
+        heroCopy: "Saksofon na żywo. Elegancja i emocje.",
+        serviceLine: 'Wesela <span>·</span> Eventy firmowe <span>·</span> Przyjęcia <span>·</span> Koncerty',
+        contactHeroText: "Skontaktuj się ze mną",
+        aboutEyebrow: "Kilka słów o mnie",
+        aboutTitle: "Muzyka to coś więcej niż dźwięki.",
+        aboutLead: "To emocje, atmosfera i chwile, które zostają w pamięci.",
+        aboutText: "Jestem Alek Volg — saksofonista, dla którego muzyka jest sposobem wyrażania siebie i komunikowania się ze światem. Wierzę, że dźwięk potrafi zmienić atmosferę miejsca, wywołać uśmiech i sprawić, że zwykła chwila staje się wyjątkowa.",
+        aboutText2: "Podczas występów dopasowuję muzykę do charakteru wydarzenia i ludzi, którzy je tworzą — od subtelnych, nastrojowych melodii po energetyczne rytmy.",
+        offerEyebrow: "Muzyka na różne okazje",
+        offerTitle: "Dopasowana do chwili i miejsca.",
+        weddingTitle: "Wesela i uroczystości",
+        weddingText: "Muzyczna oprawa wybranych momentów — od nastrojowych melodii po energetyczne wejścia i wyjścia.",
+        corporateTitle: "Eventy firmowe",
+        corporateText: "Saksofon na spotkania firmowe, bankiety, kolacje i wydarzenia specjalne.",
+        privateTitle: "Przyjęcia i restauracje",
+        privateText: "Muzyka na żywo, która tworzy klimat podczas prywatnych uroczystości i spotkań.",
+        concertTitle: "Koncerty i wydarzenia",
+        concertText: "Występy dopasowane do miejsca, publiczności i charakteru wydarzenia.",
+        musicEyebrow: "Posłuchaj i poznaj mój styl",
+        musicTitle: "Najlepiej mówi muzyka.",
+        musicText: "Odwiedź moje profile, zobacz nagrania i poznaj różne odsłony mojej muzycznej drogi. Wkrótce pojawią się tu również wybrane materiały wideo.",
+        contactEyebrow: "Porozmawiajmy o muzyce",
+        contactTitle: "Planujesz wydarzenie?",
+        contactText: "Napisz lub zadzwoń — porozmawiamy o charakterze wydarzenia i muzyce, która będzie do niego pasować.",
+        whatsappText: "Napisz na WhatsApp",
+        callText: "Zadzwoń: +48 665 744 482",
+        emailText: "Napisz e-mail",
+        footerText: "Saksofon na żywo · Polska",
+        rightsText: "Wszelkie prawa zastrzeżone."
+      },
+      en: {
+        langBtn: "PL",
+        heroEyebrow: "Saxophonist · Musician",
+        tagline: "Music that stays with you.",
+        heroCopy: "Live saxophone. Elegance and emotion.",
+        serviceLine: 'Weddings <span>·</span> Corporate events <span>·</span> Private parties <span>·</span> Concerts',
+        contactHeroText: "Get in touch",
+        aboutEyebrow: "A little about me",
+        aboutTitle: "Music is more than sound.",
+        aboutLead: "It is emotion, atmosphere and moments that stay with us.",
+        aboutText: "I'm Alek Volg, a saxophonist who sees music as a way to express himself and connect with the world. I believe a sound can change the atmosphere of a place, bring a smile, and turn an ordinary moment into something special.",
+        aboutText2: "I shape the music around each event and the people who make it what it is — from subtle, soulful melodies to vibrant, energetic rhythms.",
+        offerEyebrow: "Music for different occasions",
+        offerTitle: "Shaped around the moment.",
+        weddingTitle: "Weddings and celebrations",
+        weddingText: "Live music for special moments, from soulful melodies to uplifting entrances and exits.",
+        corporateTitle: "Corporate events",
+        corporateText: "Live saxophone for company gatherings, receptions, dinners and special events.",
+        privateTitle: "Private parties and restaurants",
+        privateText: "Live music to create the right atmosphere for celebrations and get-togethers.",
+        concertTitle: "Concerts and events",
+        concertText: "Performances shaped around the venue, audience and character of the event.",
+        musicEyebrow: "Listen and discover my style",
+        musicTitle: "Let the music speak.",
+        musicText: "Visit my profiles, explore the recordings and discover different sides of my musical journey. Selected videos will be added here soon.",
+        contactEyebrow: "Let's talk about music",
+        contactTitle: "Planning an event?",
+        contactText: "Send me a message or give me a call. We can talk about your event and the music that would suit it.",
+        whatsappText: "Message on WhatsApp",
+        callText: "Call: +48 665 744 482",
+        emailText: "Send an email",
+        footerText: "Live saxophone · Poland",
+        rightsText: "All rights reserved."
+      }
+    };
+
+    let currentLang = "pl";
+    function toggleLanguage() {
+      currentLang = currentLang === "pl" ? "en" : "pl";
+      document.documentElement.lang = currentLang;
+      const copy = translations[currentLang];
+      Object.keys(copy).forEach((id) => {
+        const element = document.getElementById(id);
+        if (element) element.innerHTML = copy[id];
+      });
+      document.getElementById("langBtn").setAttribute("aria-label", currentLang === "pl" ? "Switch language to English" : "Zmień język na polski");
+    }
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
